@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="75.33596mm"
+   height="76.956932mm"
+   viewBox="0 0 75.33596 76.956932"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="knutils-logo.svg"
+   inkscape:export-filename="C:\Users\knutankv\git-repos\knutils\knutils-logo.png"
+   inkscape:export-xdpi="92.266701"
+   inkscape:export-ydpi="92.266701">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient895">
+      <stop
+         style="stop-color:#776565;stop-opacity:1"
+         offset="0"
+         id="stop891" />
+      <stop
+         style="stop-color:#94cfc3;stop-opacity:1"
+         offset="1"
+         id="stop893" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient895"
+       id="linearGradient881"
+       x1="66.996277"
+       y1="102.43675"
+       x2="102.43155"
+       y2="102.34226"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient895"
+       id="linearGradient883"
+       x1="75.973213"
+       y1="103.2872"
+       x2="36.758186"
+       y2="103.2872"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="164.64825"
+     inkscape:cy="78.35485"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="716"
+     inkscape:window-height="405"
+     inkscape:window-x="277"
+     inkscape:window-y="322"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-29.443913,-31.540001)">
+    <path
+       style="opacity:1;fill:#94cfc3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26499999;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58530045;stroke-opacity:1;paint-order:stroke fill markers"
+       id="path815"
+       sodipodi:type="arc"
+       sodipodi:cx="46.841385"
+       sodipodi:cy="48.937473"
+       sodipodi:rx="40.065475"
+       sodipodi:ry="40.065475"
+       sodipodi:start="0"
+       sodipodi:end="1.3089969"
+       d="M 86.90686,48.937473 A 40.065475,40.065475 0 0 1 57.211094,87.63775 L 46.841385,48.937473 Z" />
+    <path
+       id="circle817"
+       style="opacity:1;fill:#94cfc3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26499999;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58530045;stroke-opacity:1;paint-order:stroke fill markers"
+       sodipodi:type="arc"
+       sodipodi:cx="46.841385"
+       sodipodi:cy="48.937473"
+       sodipodi:rx="17.397472"
+       sodipodi:ry="17.397472"
+       sodipodi:start="1.5707963"
+       sodipodi:end="6.0213859"
+       d="M 46.841385,66.334946 A 17.397472,17.397472 0 0 1 29.510115,50.453763 17.397472,17.397472 0 0 1 43.820345,31.804308 17.397472,17.397472 0 0 1 63.646053,44.434676 l -16.804668,4.502797 z" />
+    <path
+       d="m -86.878921,66.602215 a 17.397472,17.397472 0 0 1 -17.331269,-15.881183 17.397472,17.397472 0 0 1 14.310229,-18.649455 17.397472,17.397472 0 0 1 19.825707,12.630368 l -16.804668,4.502797 z"
+       sodipodi:end="6.0213859"
+       sodipodi:start="1.5707963"
+       sodipodi:ry="17.397472"
+       sodipodi:rx="17.397472"
+       sodipodi:cy="49.204742"
+       sodipodi:cx="-86.878922"
+       sodipodi:type="arc"
+       style="opacity:1;fill:#94cfc3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26499999;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58530045;stroke-opacity:1;paint-order:stroke fill markers"
+       id="path821"
+       transform="scale(-1,1)" />
+    <circle
+       style="opacity:1;fill:#377b6d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26458332;paint-order:stroke fill markers"
+       id="path823"
+       cx="59.200199"
+       cy="86.525246"
+       r="4.4099469" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.56210899px;line-height:19.33552933px;font-family:Verdana;-inkscape-font-specification:Verdana;letter-spacing:0px;word-spacing:0px;fill:#377b6d;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="27.982027"
+       y="108.31132"
+       id="text827"><tspan
+         sodipodi:role="line"
+         id="tspan825"
+         x="27.982027"
+         y="108.31132"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:Quicksand;fill:#377b6d;fill-opacity:1;stroke-width:0.26458332">KNUT</tspan></text>
+    <text
+       id="text831"
+       y="108.31132"
+       x="56.377621"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.56210899px;line-height:19.33552933px;font-family:Verdana;-inkscape-font-specification:Verdana;letter-spacing:0px;word-spacing:0px;fill:#377b6d;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:Quicksand;fill:#377b6d;fill-opacity:1;stroke-width:0.26458332"
+         y="108.31132"
+         x="56.377621"
+         id="tspan829"
+         sodipodi:role="line">UTILS</tspan></text>
+  </g>
+</svg>
