@@ -1,4 +1,4 @@
-.. image:: kntuils-logo.svg
+.. image:: knutils-logo.svg
     :width: 300px
 
 KNUTILS
