@@ -166,11 +166,14 @@ def plot_elements_from_matrices(element_matrix, node_matrix, chosen_nodes_ix=[],
     return ax, element_handles
 
 
-def figsave(name, w=16, h=10, fig=None):
+def figsave(name, w=16, h=10, fig=None, maketight=True, fileformat='png'):
 
     if fig is None:
         fig = plt.gcf()
 
     fig.set_figwidth(w/2.54), fig.set_figheight(h/2.54)
-    fig.tight_layout()
-    fig.savefig(f'{name}.png', dpi=800)
+
+    if maketight:
+        fig.tight_layout()
+
+    fig.savefig(f'{name}.{fileformat}', dpi=800)

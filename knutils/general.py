@@ -13,3 +13,26 @@ def normalize_phi(phi, include_dofs=[0,1,2,3,4,5,6], n_dofs=6):
     phi_n = phi/np.tile(mode_scaling[np.newaxis,:]/signs[np.newaxis,:], [phi.shape[0], 1])
 
     return phi_n, mode_scaling
+
+def range_fun(*args, return_string=False):
+    fun_strings = [None]*len(args)
+
+    for ix, arg in enumerate(args):
+        lower = np.min(arg)
+        upper = np.max(arg)
+
+        strs = []
+        if lower != -np.inf:
+            strs.append(f'(x>={lower})')
+
+        if upper != np.inf:
+            strs.append(f'(x<={upper})')    
+        
+        fun_strings[ix] = '(' + '&'.join(strs) + ')'
+
+    fun_string = 'lambda x: ' + '|'.join(fun_strings)
+
+    if return_string:
+        return fun_string
+    else:
+        return eval(fun_string)
