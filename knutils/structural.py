@@ -1,5 +1,20 @@
 import numpy as np
 
+def estimate_sixdofs(a, b, a_x, b_x, x0=None):
+    # SUSPECTED AS NOT CORRECT! HAS TO BE VERIFIED/MODIFIED ...
+    if x0 is None:
+        x0 = np.array([0,0,0])
+        
+    trans_dofs = np.mean([a,b], axis=0)   
+    rot_dofs = trans_dofs*0
+    
+    for k in range(a.shape[0]):
+        rot_dofs[k,:] = np.cross(a[k, :], a_x-x0) + np.cross(b[k, :], b_x-x0)
+        
+    sixdofs = np.hstack([trans_dofs, rot_dofs])
+    
+    return sixdofs
+    
 
 def phi_by_dof(phi, n_dofs=6):
 
