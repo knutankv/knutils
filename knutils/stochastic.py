@@ -63,7 +63,7 @@ def fft_time(omega, t0=0):
     return t
 
 
-def adjust_for_ifft(S, omega, duration=None, samplerate=None, nfft_roundup=True, interpol_kind='linear'):  
+def adjust_for_ifft(S, omega, duration=None, samplerate=None, nfft_roundup=True, interpol_kind='linear', avoid_warnings=False):  
     # For extremely narrow-banded S (e.g. single harmonics) do not specify duration without extreme caution - this might cause problems for the discretization of S. 
     # #The same goes for the nfft_roundup flag (should only be used with extreme caution)
 
@@ -85,10 +85,10 @@ def adjust_for_ifft(S, omega, duration=None, samplerate=None, nfft_roundup=True,
 
         df = 1/duration
 
-        if df*2*np.pi>domega:
+        if df*2*np.pi>domega and not avoid_warnings:
             print('WARNING: The specified duration gives a coarser frequency resolution than the inputted spectral density. This could cause problems.')
 
-        if samplerate*2*np.pi<max(omega):
+        if samplerate*2*np.pi<max(omega) and not avoid_warnings:
             print('WARNING: The specified samplerate gives a maximum frequency below the specified frequency axis.')
 
         omega_adjusted = np.arange(0, samplerate*2*np.pi, df*2*np.pi)
