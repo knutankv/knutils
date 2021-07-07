@@ -11,19 +11,23 @@ def xwelch(x, **kwargs):
 
     return f, cpsd
 
-def xfft(x, fs=1.0, onesided=True):
+def xfft(x, fs=1.0, onesided=True, **kwargs):
     n_samples = x.shape[0]
     f = np.fft.fftfreq(n_samples, 1/fs)
     cpsd = np.zeros([x.shape[1], x.shape[1], len(f)]).astype('complex')
 
     for i, xi in enumerate(x.T):
-        Xi = np.fft.fft(xi)
+        Xi = np.fft.fft(xi,**kwargs)
         for j, xj in enumerate(x.T):
-            Xj = np.fft.fft(xj) 
+            Xj = np.fft.fft(xj,**kwargs) 
             cpsd[i,j,:] = 1/(fs*n_samples)*np.conj(Xi)*Xj        
 
     if onesided:
-        n_sel = int(np.floor(n_samples/2))
-        f = f[:n_sel]
-        cpsd = 2*cpsd[:,:,:n_sel]
+        # n_sel = int(np.floor(n_samples/2))
+        # f = f[:n_sel]
+        # cpsd = 2*cpsd[:,:,:n_sel]
+        
+        f = f[0:n_samples//2]
+        cpsd = 2*cpsd[:,:,0:n_samples//2]
+        
     return f, cpsd
