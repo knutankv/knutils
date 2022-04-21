@@ -1,6 +1,6 @@
 import numpy as np
 
-def normalize_phi(phi, include_dofs=[0,1,2,3,4,5,6], n_dofs=6):
+def normalize_phi(phi, include_dofs=[0,1,2,3,4,5], n_dofs=6):
     phi_n = phi*0
 
     phi_for_scaling = np.vstack([phi[dof::n_dofs, :] for dof in include_dofs])
