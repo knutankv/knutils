@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.signal import csd
+from scipy.fft import fft, ifft, fftfreq
 
 def xwelch(x, **kwargs):
     f, __ = csd(x[:,0], x[:,0], **kwargs)
@@ -31,3 +32,18 @@ def xfft(x, fs=1.0, onesided=True, **kwargs):
         cpsd = 2*cpsd[:,:,0:n_samples//2]
         
     return f, cpsd
+
+def time_int(x, fs, levels=1, apply_filter=None):
+    L = x.shape[0]
+    dt = 1/fs
+    f = fftfreq(L, dt)
+    x_int = [x] + [None]*levels
+    for level in range(1,levels+1):
+            this_x_fft = (2*np.pi*f*1j)**(-1) * fft(x_int[level-1])
+            this_x_fft[0] = 0
+            x_int[level] = np.real(ifft(this_x_fft))
+
+            if apply_filter is not None:
+                x_int[level] = apply_filter(x_int[level])
+
+    return x_int
