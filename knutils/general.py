@@ -1,5 +1,10 @@
 import numpy as np
 
+def xbeta(wn):
+    wn = np.array([np.array(wn).flatten()])    # now a row vector
+    beta = np.dot(wn.T, 1/wn)
+    return beta
+
 def normalize_phi(phi, include_dofs=[0,1,2,3,4,5], n_dofs=6):
     phi_n = phi*0
 

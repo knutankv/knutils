@@ -3,6 +3,106 @@ import matplotlib.pyplot as plt
 import matplotlib
 from mpl_toolkits.mplot3d import Axes3D
 import copy as cp
+from matplotlib.backends.backend_pdf import PdfPages
+
+def plot_many_modes_pdf(phi, lambd, modes_on_pages, path, x=None, 
+                        m=None, trans_scale=1.0, rot_scale_min=0.0, str_fun=None):
+        
+    if str_fun is None:
+        str_fun = lambda lambd: f'f_n = {np.abs(lambd):.3f} Hz \n xi = {-np.real(lambd)/np.abs(lambd)*100:.1f} %'
+        
+    if x is None:
+        x = np.arange(1, phi.shape[0]/6+1, 1)
+
+    plt.figure(12345).clf()
+    num = 12345
+
+    if m is None:
+        m=np.nan*np.ones(len(lambd))
+    
+    k = np.abs(lambd)**2 * m
+
+
+    with PdfPages(path) as pdf:
+        for modesi in modes_on_pages:
+            n_modes = len(modesi)
+            num = num+1
+            
+            fig, ax = plt.subplots(nrows=n_modes, ncols=4, num=num, sharex=True)
+
+            for mode_ix, mode in enumerate(modesi):
+                ax[mode_ix, 0].plot(x, phi[1::6, mode])
+                ax[mode_ix, 1].plot(x, phi[2::6, mode])
+                ax[mode_ix, 2].plot(x, phi[3::6, mode])
+                ax[mode_ix, 3].set_axis_off()
+                                
+                if ~np.isnan(k[mode]):
+                    secondary_text = f'k={k[mode]:.2e}\nm={m[mode]:.2e}'
+                else:
+                    secondary_text = ''
+                    
+                ax[mode_ix, 3].text(-1, 1, str_fun(lambd[mode]), color='black', va='top')
+                ax[mode_ix, 3].text(-1, 0.5, secondary_text, color='gray', va='top')
+                
+                ax[mode_ix,0].set_ylim([-trans_scale, trans_scale])
+                ax[mode_ix,1].set_ylim([-trans_scale, trans_scale])
+                
+                if np.max(phi[3::6, mode_ix])< rot_scale_min:
+                    ax[mode_ix,2].set_ylim([-1,1])
+                
+                ax[mode_ix, 0].grid('on')
+                ax[mode_ix, 1].grid('on')
+                ax[mode_ix, 2].grid('on')
+                
+                ax[mode_ix, 0].set_ylabel(f'Mode {mode+1}')
+                
+            ax[-1,0].set_xlabel('x [m]')
+            ax[-1,1].set_xlabel('x [m]')
+            ax[-1,2].set_xlabel('x [m]')
+            ax[-1,0].set_xlim([0,np.max(x)])
+            ax[-1,1].set_xlim([0,np.max(x)])
+            ax[-1,2].set_xlim([0,np.max(x)])
+            
+            ax[-1,0].xaxis.set_ticks([0,np.max(x)/2,np.max(x)])
+            ax[-1,1].xaxis.set_ticks([0,np.max(x)/2,np.max(x)])
+            ax[-1,2].xaxis.set_ticks([0,np.max(x)/2,np.max(x)])
+            
+            ax[0,0].set_title('Lateral')
+            ax[0,1].set_title('Vertical')
+            ax[0,2].set_title('Torsional')        
+            
+            fig.set_size_inches(21/2.54, 29.7/2.54)
+            fig.tight_layout()
+            pdf.savefig(fig)
+            plt.close(fig)
+            
+
+def plot_matrix(matrix, color_matrix=None, format_spec='%.1f', color_map=plt.cm.Pastel1_r, 
+                first_index=0, show_text=True, num=None, ax=None, vmin=None, vmax=None):
+
+    if ax is None:
+        if num is None:
+            fig, ax = plt.subplots()
+        else:
+            fig,ax = plt.subplots(num=num)
+
+    if color_matrix is None:
+        color_matrix = matrix
+
+    N = np.shape(matrix)[0]
+    ax.matshow(color_matrix, cmap=color_map, vmin=vmin, vmax=vmax)
+
+    if show_text:
+        for i in range(0, N):
+            for j in range(0, N):
+                ax.text(i, j, format_spec % matrix[j,i], va='center', ha='center')
+
+    matplotlib.pyplot.xticks(range(0,N),range(0+first_index, N+first_index))
+    matplotlib.pyplot.yticks(range(0,N),range(0+first_index, N+first_index))
+
+    matplotlib.colors.Normalize(vmin=np.min(color_matrix),vmax=np.max(color_matrix))
+
+    return fig, ax
 
 def equal_3d(ax=plt.gca()):
     x_lims = np.array(ax.get_xlim())
