@@ -9,7 +9,7 @@ def plot_many_modes_pdf(phi, lambd, modes_on_pages, path, x=None,
                         m=None, trans_scale=1.0, rot_scale_min=0.0, str_fun=None):
         
     if str_fun is None:
-        str_fun = lambda lambd: f'f_n = {np.abs(lambd):.3f} Hz \n xi = {-np.real(lambd)/np.abs(lambd)*100:.1f} %'
+        str_fun = lambda lambd: f'f_n = {np.abs(lambd)/2/np.pi:.3f} Hz \n xi = {-np.real(lambd)/np.abs(lambd)*100:.1f} %'
         
     if x is None:
         x = np.arange(1, phi.shape[0]/6+1, 1)
