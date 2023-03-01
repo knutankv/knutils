@@ -5,7 +5,6 @@ KNUTILS
 =======================
 
 KNUTILS is a collection of useful Python tools for modal analysis, structural dynamics and other crucial aspects of life.
-Please refer to the `documentation <https://knutils.readthedocs.io/>`_ for more details. *Will soon start adding code.*
 
 
 Installation and usage
