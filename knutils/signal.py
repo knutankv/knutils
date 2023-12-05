@@ -2,6 +2,14 @@ import numpy as np
 from scipy.signal import csd
 from scipy.fft import fft, ifft, fftfreq
 
+def coherency_from_cpsd(S):
+    gamma = S*0.0
+    for comp1 in range(S.shape[0]):
+        for comp2 in range(S.shape[0]):
+            gamma[comp1, comp2,:] = S[comp1, comp2]/np.sqrt(S[comp1, comp1, :] * S[comp2, comp2, :])
+            
+    return gamma
+
 def xwelch(x, **kwargs):
     f, __ = csd(x[:,0], x[:,0], **kwargs)
     cpsd = np.zeros([x.shape[1], x.shape[1], len(f)]).astype('complex')
@@ -47,3 +55,15 @@ def time_int(x, fs, levels=1, apply_filter=None):
                 x_int[level] = apply_filter(x_int[level])
 
     return x_int
+
+
+def ramp_up(Nramp, Ntot):
+    t_scale = np.ones(Ntot)
+    t_scale[:Nramp] = np.linspace(0, 1, Nramp)
+    return t_scale
+
+def ramp_up_t(t, t0):
+    Nramp = np.sum(t<t0)
+    Ntot = len(t)
+    
+    return ramp_up(Nramp, Ntot)
