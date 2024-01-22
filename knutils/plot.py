@@ -275,5 +275,9 @@ def figsave(name, w=16, h=10, fig=None, maketight=True, fileformat='png'):
 
     if maketight:
         fig.tight_layout()
-
-    fig.savefig(f'{name}.{fileformat}', dpi=800)
+    
+    if type(fileformat) is str:
+        fileformat = [fileformat]
+        
+    for ff in fileformat:
+        fig.savefig(f'{name}.{ff}', dpi=800)
