@@ -11,9 +11,14 @@ class WheatstoneBridge:
 
     Attributes
     --------------
-    GF, k :
-    poisson, v :
-    V :
+    k : dict
+        dictionary containing gauge factors of all resistors; if float input is
+        given in initialization method, a dict is created where the gauge factor
+        is identical to the float for all resistors ('R1', 'R2', 'R3', 'R4')        
+    poisson, v : float, default=0.3
+        Poisson ratio of material on which strain gauges are mounted
+    V : float
+        input voltage
     R1, R2, R3, R4 : functions, optional
         functions of variables `eps` and `v`
     gauge_resistance : float, default=350
@@ -36,19 +41,47 @@ class WheatstoneBridge:
     Here, all resistances R1-R4 are either given by strain gauges or fixed resistors. V is the input
     voltage (excitation) and Vo the output voltage.
 
+    
+    Example
+    -----------
+    A quarter bridge setup (using R1) with an input voltage of 5V, GF=2.0 and poisson ratio of 0.3,
+    would be defined as follows:
+        
+        `StrainGauge(5.0, R1='eps')`
+
+    Alternatively, a half bridge setup used for a bending type of strain where strain gauges 
+    (let's say R1 and R2) are placed on each side of a bending beam can be defined as follows:
+
+        `StrainGauge(5.0, R1='eps', R2='-eps')`
+    
+    As the strains from both tension and compression is added (inverse signs), the bridge factor is 2 in this case.
+    (Note that this is taken care of automatically).
+
+    Finally, a full bridge setup for tension and compression can designed by placing two gauges on the tension side and
+    two gauges on the compression side of a beam. One of the gauges on each side will be placed in the transverse direction 
+    (the other in the principal direction) to compensate for temperature effects and bending. Assume R1 and R2 (transverse) is placed
+    on the tension side and R3 (transverse) and R4 on the compression side. This setup is described as follows:
+
+        `StrainGauge(5.0, R1='eps', R2= '-v*eps', R3='-v*eps', R4='eps')`
+
     '''
 
     resistor_names = ['R1', 'R2', 'R3', 'R4']
 
-    def __init__(self, V, GF=2.0, poisson=0.3, gauge_resistance=350.0,
+    def __init__(self, V, k=2.0, poisson=0.3, gauge_resistance=350.0,
                  R1=None, R2=None, R3=None, R4=None):
         '''
         
         Parameters
         ------------
-        V : 
-        GF : 
-        poisson :
+        V : float
+            input voltage
+        k : float or dict, default=2.0
+            gauge factor; either float input (all resistors assumed identical GF) or
+            dictionary (resistors' gauge factor specified explicitly by keys 'R1', 'R2',
+            'R3, 'R4'')
+        poisson : float, default=0.3
+            Poisson ratio of material considered (value used for `v`)
         R1, R2, R3, R4 : functions, optional
             strings defining functions of variables `eps` and `v`
         gauge_resistance : float, default=350
@@ -57,30 +90,12 @@ class WheatstoneBridge:
             whether or not the bridge is designed to be balanced at no strain (used to predict values for resistors
             not being strain gauges); otherwise, non-gauge resistors must be explicitly defined with float values
 
-        Example
-        -----------
-        A quarter bridge setup (using R1) with an input voltage of 5V, GF=2.0 and poisson ratio of 0.3,
-        would be defined as follows:
-            
-            `StrainGauge(5.0, R1='eps')`
-
-        Alternatively, a half bridge setup used for a bending type of strain where strain gauges 
-        (let's say R1 and R2) are placed on each side of a bending beam can be defined as follows:
-
-            `StrainGauge(5.0, R1='eps', R2='-eps')`
-        
-        As the strains from both tension and compression is added (inverse signs), the bridge factor is 2 in this case.
-        (Note that this is taken care of automatically).
-
-        Finally, a full bridge setup for tension and compression can designed by placing two gauges on the tension side and
-        two gauges on the compression side of a beam. One of the gauges on each side will be placed in the transverse direction 
-        (the other in the principal direction) to compensate for temperature effects and bending. Assume R1 and R2 (transverse) is placed
-        on the tension side and R3 (transverse) and R4 on the compression side. This setup is described as follows:
-
-            `StrainGauge(5.0, R1='eps', R2= '-v*eps', R3='-v*eps', R4='eps')`
-
         '''
-        self.GF = self.k = GF
+        if isinstance(k, dict):
+            self.k = k
+        else:
+            self.k = dict(R1=k, R2=k, R3=k, R4=k)
+
         self.V = V  #input voltage/excitation
         self.poisson = self.v = poisson     # poisson ratio of material mounted to 
         self.R0 = gauge_resistance
@@ -179,20 +194,14 @@ class WheatstoneBridge:
             return lambda __: np.nan
 
     def get_strain(self, Vout):
-        eps = self.sym['eps']
-        fun = sympy.lambdify(eps, self.Vout - Vout)
-        sol = fsolve(fun, 0.0)
-        if len(sol)==1:
-            return sol[0]
-        else:
-            return np.nan
+        return self.get_strain_fun()(Vout)
 
     def assign_R(self, name, R):
         v = self.sym['v']
 
         if R is not None and isinstance(R, str):
             eps_exp = sympy.symbols('eps_exp') 
-            Rfun = (self.R0*(1 + eps_exp*self.GF))
+            Rfun = (self.R0*(1 + eps_exp*self.k[name]))
             assign_val = Rfun.subs(eps_exp, parse_expr(R).subs(v, self.poisson))
         else:
             assign_val = R
