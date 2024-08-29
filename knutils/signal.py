@@ -10,6 +10,15 @@ def coherency_from_cpsd(S):
             
     return gamma
 
+from scipy.signal import butter, sosfilt, sosfiltfilt, sosfreqz
+def butter_construct(cuts, fs, btype='band', order=5):
+        nyq = 0.5 * fs
+        cuts = [cut/nyq for cut in cuts]
+        sos = butter(order, cuts, analog=False, btype=btype, output='sos')
+
+        return sos
+
+
 def xwelch(x, **kwargs):
     f, __ = csd(x[:,0], x[:,0], **kwargs)
     cpsd = np.zeros([x.shape[1], x.shape[1], len(f)]).astype('complex')

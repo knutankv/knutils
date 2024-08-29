@@ -29,7 +29,7 @@ def rayleigh_variance_to_scaling(var):
 def random_phase_angles(n_len, n_sim=1):
     phase_angles = np.random.rand(n_len, n_sim)*2*np.pi    
     if n_sim==1:
-        phase_angles = phase_angles[:, 0]
+        phase_angles = phase_angles[:, 0:1]
 
     return phase_angles    
 
