@@ -2,6 +2,8 @@ import numpy as np
 from scipy.signal import csd
 
 from scipy.signal import butter, sosfilt, sosfiltfilt, sosfreqz
+from scipy.integrate import cumulative_trapezoid
+
 def butter_construct(cuts, fs, btype='band', order=5):
         nyq = 0.5 * fs
         cuts = [cut/nyq for cut in cuts]
@@ -40,3 +42,26 @@ def xfft(x, fs=1.0, onesided=True, **kwargs):
         cpsd = 2*cpsd[:,:,0:n_samples//2]
         
     return f, cpsd
+
+
+def time_integrate(data, fs, levels, domain='frequency', axis=0, filters=[]):
+    datai = [None]*(levels+1)
+    datai[0] = data*1
+    
+    for filter_i in filters:
+        data = sosfiltfilt(filter_i, data, axis=axis)
+    
+    for i in range(1,levels+1):
+        if domain == 'frequency':
+            f = np.fft.fftfreq(data.shape[0])
+            
+            fft_data = np.fft.fft(datai[i-1], axis=axis)
+            factor = (1./(2*np.pi*f[1:]*1j))**i
+            thisdataf = fft_data*0
+            thisdataf[1:, :] = fft_data[1:, :]*factor
+            datai[i] = np.real(np.fft.ifft(thisdataf, axis=axis))
+        else:
+            t = np.arange(0, data.shape[0]*(1/fs), 1/fs)
+            datai[i] = cumulative_trapezoid(datai[i-1], x=t, axis=axis, initial=0.0)
+    
+    return datai[1:]
