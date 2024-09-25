@@ -45,11 +45,13 @@ def xfft(x, fs=1.0, onesided=True, **kwargs):
 
 
 def time_integrate(data, fs, levels, domain='frequency', axis=0, filters=[]):
+
+    for filter_i in filters:
+        data = sosfilt(filter_i, data, axis=axis)
+    
     datai = [None]*(levels+1)
     datai[0] = data*1
     
-    for filter_i in filters:
-        data = sosfiltfilt(filter_i, data, axis=axis)
     
     for i in range(1,levels+1):
         if domain == 'frequency':
