@@ -1,5 +1,14 @@
 import numpy as np
 from scipy.signal import csd
+from scipy.fft import fft, ifft, fftfreq
+
+def coherency_from_cpsd(S):
+    gamma = S*0.0
+    for comp1 in range(S.shape[0]):
+        for comp2 in range(S.shape[0]):
+            gamma[comp1, comp2,:] = S[comp1, comp2]/np.sqrt(S[comp1, comp1, :] * S[comp2, comp2, :])
+            
+    return gamma
 
 from scipy.signal import butter, sosfilt, sosfiltfilt, sosfreqz
 from scipy.integrate import cumulative_trapezoid
@@ -67,3 +76,14 @@ def time_integrate(data, fs, levels, domain='frequency', axis=0, filters=[]):
             datai[i] = cumulative_trapezoid(datai[i-1], x=t, axis=axis, initial=0.0)
     
     return datai[1:]
+
+def ramp_up(Nramp, Ntot):
+    t_scale = np.ones(Ntot)
+    t_scale[:Nramp] = np.linspace(0, 1, Nramp)
+    return t_scale
+
+def ramp_up_t(t, t0):
+    Nramp = np.sum(t<t0)
+    Ntot = len(t)
+    
+    return ramp_up(Nramp, Ntot)
