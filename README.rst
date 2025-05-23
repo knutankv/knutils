@@ -31,10 +31,6 @@ Thereafter, import the package modules, exemplified for the `structural` module,
     import knutils.structural
 
 
-Citation
-=======================
-...
-
 Support
 =======================
 Please `open an issue <https://github.com/knutankv/knutils/issues/new>`_ for support.
