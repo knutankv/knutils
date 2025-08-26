@@ -1,6 +1,6 @@
 from scipy.interpolate import interp1d
 import numpy as np
-
+from scipy.stats import norm
 
 def harmonic_spectrum(omega_peak, amplitude, domega, omega_max, as_variance=None, minimum_duration=0):
     if minimum_duration!=0:
@@ -125,3 +125,72 @@ def flat_spectrum(S0, spectrum_range, omega, is_variance=False):
     
     return S
    
+
+def get_short_term_prob(S, omega, T):
+    from wawi.random import v0_from_spectrum
+    v0_max = np.max(np.diag(np.real(v0_from_spectrum(S, omega))))
+    Nmax = v0_max*T
+    p = 1/Nmax
+    
+    return p
+
+def short_term_iform_from_cpsd(S, omega, T, n_points=1000):
+    from wawi.random import v0_from_spectrum
+    R = np.trapz(np.real(S), omega, axis=-1)
+    p = get_short_term_prob(S, omega, T)
+    
+    return short_term_iform_from_cov(R, p, n_points=100)
+    
+def get_extreme_prob(S, omega, T):
+    from scipy.stats import norm
+    from wawi.random import expmax_from_cpsd, expmax_from_spectrum
+    beta_extreme=0.0
+    var = np.diag(np.trapz(S, x=omega))
+    std = np.real(np.sqrt(var))
+    
+    for comp in range(S.shape[0]):
+        beta_extreme = np.max([beta_extreme, np.real(expmax_from_spectrum(S[comp,comp,:], omega, T))]/std[comp])
+    p_extreme = 1 - norm.cdf(beta_extreme)
+    
+    return p_extreme
+
+def short_term_iform_from_cov(R, p, n_points=100):
+    """
+    Calculates a 2D load contour using IFORM for a given return period.
+
+
+    Parameters
+    ----------
+    R : ndarray
+        covariance matrix for the components
+    p : float
+        target probability
+    n_points : int, optional
+        Number of points to be calculated on the contour.
+
+    Returns
+    -------
+    ndarray
+        An (n_points x 2) array with load combinations [X1, X2] on the contour.
+    """
+
+    n_dims = R.shape[0]
+    
+    # Steg 1: Bestem målsannsynlighet (beta)
+    beta = -norm.ppf(p)
+
+    # Steg 2: Definer konturen i n-dimensjonalt u-rom (hypersfære)
+    random_points = np.random.normal(size=(n_dims, n_points))
+    norms = np.linalg.norm(random_points, axis=0)
+    u_hypersphere = beta * random_points / norms
+    # ------------------------------------
+
+    # Steg 3: Transformer konturen til fysisk rom (x-rom)
+    try:
+        L = np.linalg.cholesky(R)
+    except np.linalg.LinAlgError:
+        raise ValueError('R is not positive definite.')
+
+    x_contour = L @ u_hypersphere
+    
+    return x_contour.T # Returnerer (n_points x n_dims)

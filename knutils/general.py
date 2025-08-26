@@ -1,5 +1,12 @@
 import numpy as np
 
+def rotsort(list_of_xy_coords):
+    cx, cy = list_of_xy_coords.mean(0)
+    x, y = list_of_xy_coords.T
+    angles = np.arctan2(x-cx, y-cy)
+    indices = np.argsort(angles)
+    return list_of_xy_coords[indices]
+
 def xbeta(wn):
     wn = np.array([np.array(wn).flatten()])    # now a row vector
     beta = np.dot(wn.T, 1/wn)
