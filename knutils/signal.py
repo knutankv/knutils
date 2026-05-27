@@ -13,7 +13,12 @@ def coherency_from_cpsd(S):
 from scipy.signal import butter, sosfilt, sosfiltfilt, sosfreqz
 def butter_construct(cuts, fs, btype='band', order=5):
         nyq = 0.5 * fs
-        cuts = [cut/nyq for cut in cuts]
+
+        if isinstance(cuts, (int, float)):
+            cuts = cuts/nyq
+        else:
+            cuts = [cut/nyq for cut in cuts]
+
         sos = butter(order, cuts, analog=False, btype=btype, output='sos')
 
         return sos
