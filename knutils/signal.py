@@ -11,6 +11,8 @@ def coherency_from_cpsd(S):
     return gamma
 
 from scipy.signal import butter, sosfilt, sosfiltfilt, sosfreqz
+from scipy.integrate import cumulative_trapezoid
+
 def butter_construct(cuts, fs, btype='band', order=5):
         nyq = 0.5 * fs
 
@@ -34,14 +36,21 @@ def xwelch(x, **kwargs):
 
     return f, cpsd
 
-def xfft(x, fs=1.0, onesided=True, **kwargs):
-    n_samples = x.shape[0]
+def xfft(x, fs=1.0, onesided=True, zp=1.0, **kwargs):
+    if zp > 1.0:
+        data = np.zeros([x.shape[0]*zp, x.shape[1]])
+        data[:x.shape[0],:] = x
+    
+    else:
+        data = x*1
+    
+    n_samples = data.shape[0]
     f = np.fft.fftfreq(n_samples, 1/fs)
-    cpsd = np.zeros([x.shape[1], x.shape[1], len(f)]).astype('complex')
+    cpsd = np.zeros([data.shape[1], data.shape[1], len(f)]).astype('complex')
 
-    for i, xi in enumerate(x.T):
+    for i, xi in enumerate(data.T):
         Xi = np.fft.fft(xi,**kwargs)
-        for j, xj in enumerate(x.T):
+        for j, xj in enumerate(data.T):
             Xj = np.fft.fft(xj,**kwargs) 
             cpsd[i,j,:] = 1/(fs*n_samples)*np.conj(Xi)*Xj        
 
@@ -55,21 +64,30 @@ def xfft(x, fs=1.0, onesided=True, **kwargs):
         
     return f, cpsd
 
-def time_int(x, fs, levels=1, apply_filter=None):
-    L = x.shape[0]
-    dt = 1/fs
-    f = fftfreq(L, dt)
-    x_int = [x] + [None]*levels
-    for level in range(1,levels+1):
-            this_x_fft = (2*np.pi*f*1j)**(-1) * fft(x_int[level-1])
-            this_x_fft[0] = 0
-            x_int[level] = np.real(ifft(this_x_fft))
 
-            if apply_filter is not None:
-                x_int[level] = apply_filter(x_int[level])
+def time_integrate(data, fs, levels, domain='frequency', axis=0, filters=[]):
 
-    return x_int
-
+    for filter_i in filters:
+        data = sosfilt(filter_i, data, axis=axis)
+    
+    datai = [None]*(levels+1)
+    datai[0] = data*1
+    
+    
+    for i in range(1,levels+1):
+        if domain == 'frequency':
+            f = np.fft.fftfreq(data.shape[0])
+            
+            fft_data = np.fft.fft(datai[i-1], axis=axis)
+            factor = (1./(2*np.pi*f[1:]*1j))**i
+            thisdataf = fft_data*0
+            thisdataf[1:, :] = fft_data[1:, :]*factor
+            datai[i] = np.real(np.fft.ifft(thisdataf, axis=axis))
+        else:
+            t = np.arange(0, data.shape[0]*(1/fs), 1/fs)
+            datai[i] = cumulative_trapezoid(datai[i-1], x=t, axis=axis, initial=0.0)
+    
+    return datai[1:]
 
 def ramp_up(Nramp, Ntot):
     t_scale = np.ones(Ntot)
